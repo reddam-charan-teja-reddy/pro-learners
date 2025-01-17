@@ -12,7 +12,7 @@ const HomePage = () => {
 
 	useEffect(() => {
 		const fetchCourses = async () => {
-			if (!userData.userDetails.uid) {
+			if (!userData.authState) {
 				setError('User not authenticated');
 				return;
 			}

@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAuthState, setUserDetails } from '@/store/userInfo';
 import {
-    signInWithEmailAndPassword,
-    GoogleAuthProvider,
-    signInWithPopup,
+	signInWithEmailAndPassword,
+	GoogleAuthProvider,
+	signInWithPopup,
 } from 'firebase/auth';
-import { auth } from '../../app/firebase/config';
+import { auth, db } from '../../app/firebase/config';
 
 type userProps = {
 	displayName: string;
@@ -32,15 +32,18 @@ const Auth = () => {
 			if (!displayName || !email || !photoURL) {
 				throw new Error('Missing user details');
 			}
-			await addUserDetails({ displayName, email, photoURL });
-			
+			const dbResponse = await addUserDetails({ displayName, email, photoURL });
+
 			// Update Redux state
 			dispatch(setAuthState(true));
-			dispatch(setUserDetails({
-				name: displayName,
-				email,
-				photoURL,
-			}));
+			dispatch(
+				setUserDetails({
+					uid: dbResponse.user._id,
+					name: displayName,
+					email,
+					photoURL,
+				})
+			);
 
 			router.push('/home');
 		} catch (error) {
@@ -58,7 +61,7 @@ const Auth = () => {
 			headers: { 'Content-Type': 'application/json' },
 		});
 		const response = await res.json();
-		console.log(response);
+		return response;
 		if (!res.ok) {
 			throw new Error('Failed to add user details');
 		}
