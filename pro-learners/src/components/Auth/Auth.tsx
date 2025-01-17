@@ -45,6 +45,7 @@ const Auth = () => {
 				})
 			);
 
+			// update push to replace after testing
 			router.push('/home');
 		} catch (error) {
 			setLoading(false);

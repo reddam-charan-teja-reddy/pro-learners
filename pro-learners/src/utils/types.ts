@@ -1,11 +1,12 @@
-export type CourseData = {
-    title: string;
-    description: string;
-    courseCode: string;
-}
+export type PathData = {
+	title: string;
+	description: string;
+	assignedGoals: number;
+	completedGoals: number;
+	pathCode: string;
+};
 
-export type CourseApiResponse = {
-    data: CourseData[];
-    userId: string;
-}
-
+export type PathsApiResponse = {
+	paths: PathData[];
+	userId: string;
+};

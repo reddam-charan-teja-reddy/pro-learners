@@ -1,5 +1,4 @@
-import exp from 'constants';
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const userSchema = new Schema(
 	{

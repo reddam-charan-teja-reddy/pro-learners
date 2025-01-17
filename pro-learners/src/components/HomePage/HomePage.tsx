@@ -1,12 +1,12 @@
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import CourseCard from '../CourseCard/CourseCard';
-import { CourseData, CourseApiResponse } from '@/utils/types';
+import CourseCard from '../PathCard/PathCard';
+import { PathData, PathsApiResponse } from '@/utils/types';
 import { RootState } from '@/store/store';
 
 const HomePage = () => {
-	const [courses, setCourses] = useState<CourseData[]>([]);
+	const [paths, setPaths] = useState<PathData[]>([]);
 	const [error, setError] = useState<string>('');
 	const userData = useSelector((state: RootState) => state.user);
 
@@ -19,10 +19,10 @@ const HomePage = () => {
 
 			try {
 				const response = await fetch(
-					`/api/userCourses?userId=${userData.userDetails.uid}`
+					`/api/userPaths?userId=${userData.userDetails.uid}`
 				);
-				const coursesData: CourseApiResponse = await response.json();
-				setCourses(coursesData.data);
+				const pathsData: PathsApiResponse = await response.json();
+				setPaths(pathsData.paths);
 			} catch (err) {
 				setError('Failed to fetch courses');
 			}
@@ -35,8 +35,8 @@ const HomePage = () => {
 
 	return (
 		<div>
-			{courses.map((course: CourseData) => (
-				<CourseCard key={course.courseCode} {...course} />
+			{paths.map((path: PathData) => (
+				<CourseCard key={path.pathCode} {...path} />
 			))}
 		</div>
 	);
