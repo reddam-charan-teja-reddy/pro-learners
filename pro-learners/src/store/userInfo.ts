@@ -3,20 +3,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface userData {
 	authState: boolean;
 	userDetails: {
-		uid: string;
 		name: string;
 		email: string;
-		profilePic: string;
+		photoURL: string;
 	};
 }
 
 const userInfo: userData = {
 	authState: false,
 	userDetails: {
-		uid: '',
 		name: '',
 		email: '',
-		profilePic: '',
+		photoURL: '',
 	},
 };
 
@@ -30,10 +28,9 @@ const userInfoSlice = createSlice({
 		setUserDetails: (
 			state,
 			action: PayloadAction<{
-				uid: string;
 				name: string;
 				email: string;
-				profilePic: string;
+				photoURL: string;
 			}>
 		) => {
 			state.userDetails = action.payload;
