@@ -1,6 +1,6 @@
 'use client';
 import { useDispatch } from 'react-redux';
-import { setAuthState, setUserDetails } from '@/store/userInfo';
+import { setAuthState, setUserDetails } from '@/store/userInfoSlice';
 import { useRouter } from 'next/navigation';
 
 const Logout = () => {

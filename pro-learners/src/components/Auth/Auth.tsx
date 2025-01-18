@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setAuthState, setUserDetails } from '@/store/userInfo';
+import { setAuthState, setUserDetails } from '@/store/userInfoSlice';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/app/firebase/config';
 import { RootState } from '@/store/store';

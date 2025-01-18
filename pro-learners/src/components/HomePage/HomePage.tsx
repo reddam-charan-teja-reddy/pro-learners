@@ -1,15 +1,17 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import CourseCard from '../PathCard/PathCard';
 import { PathData, PathsApiResponse } from '@/utils/types';
 import { RootState } from '@/store/store';
+import { setUserPaths } from '@/store/userPathsSlice';
 import Logout from '../Logout/Logout';
 const HomePage = () => {
-	const [paths, setPaths] = useState<PathData[]>([]);
+	const dispatch = useDispatch();
 	const [error, setError] = useState<string>('');
 	const userData = useSelector((state: RootState) => state.user);
+	const paths = useSelector((state: RootState) => state.userPaths.paths);
 	if (!userData.authState) {
 		const router = useRouter();
 		router.push('/login');
@@ -26,7 +28,7 @@ const HomePage = () => {
 					`/api/userPaths?userId=${userData.userDetails.uid}`
 				);
 				const pathsData: PathsApiResponse = await response.json();
-				setPaths(pathsData.paths);
+				dispatch(setUserPaths(pathsData));
 			} catch (err) {
 				setError('Failed to fetch courses');
 			}
