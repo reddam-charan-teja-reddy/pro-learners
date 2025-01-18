@@ -1,3 +1,4 @@
+'use client';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
@@ -9,7 +10,10 @@ const HomePage = () => {
 	const [paths, setPaths] = useState<PathData[]>([]);
 	const [error, setError] = useState<string>('');
 	const userData = useSelector((state: RootState) => state.user);
-
+	if (!userData.authState) {
+		const router = useRouter();
+		router.push('/login');
+	}
 	useEffect(() => {
 		const fetchCourses = async () => {
 			if (!userData.authState) {
@@ -35,9 +39,13 @@ const HomePage = () => {
 
 	return (
 		<div>
-			{paths.map((path: PathData) => (
-				<CourseCard key={path.pathCode} {...path} />
-			))}
+			<ul>
+				{paths.map((path: PathData, index: number) => (
+					<li key={`${path.pathCode}-${index}`}>
+						<CourseCard {...path} />
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 };

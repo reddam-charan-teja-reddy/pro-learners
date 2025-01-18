@@ -22,14 +22,14 @@ export async function GET(req: NextRequest) {
 			{
 				title: 'Course 1',
 				description: 'Description 1',
-				courseCode: 'course1',
+				courseCode: '1',
 				assignedGoals: 10,
 				completedGoals: 5,
 			},
 			{
 				title: 'Course 2',
 				description: 'Description 2',
-				courseCode: 'course2',
+				courseCode: '2',
 				assignedGoals: 7,
 				completedGoals: 5,
 			},

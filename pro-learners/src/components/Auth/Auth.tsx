@@ -3,13 +3,10 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAuthState, setUserDetails } from '@/store/userInfo';
-import {
-	signInWithEmailAndPassword,
-	GoogleAuthProvider,
-	signInWithPopup,
-} from 'firebase/auth';
-import { auth, db } from '../../app/firebase/config';
-
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '@/app/firebase/config';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 type userProps = {
 	displayName: string;
 	email: string;
@@ -21,50 +18,45 @@ const Auth = () => {
 	const dispatch = useDispatch();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
+	const userData = useSelector((state: RootState) => state.user);
+	if (userData.authState) {
+		router.push('/');
+	}
 
 	const handleGoogleSignIn = async () => {
 		try {
+			setLoading(true);
 			const provider = new GoogleAuthProvider();
 			const res = await signInWithPopup(auth, provider);
-			console.log(res);
 			const { user } = res;
 			const { displayName, email, photoURL } = user;
 			if (!displayName || !email || !photoURL) {
 				throw new Error('Missing user details');
 			}
-			const dbResponse = await addUserDetails({ displayName, email, photoURL });
-
-			// Update Redux state
+			const response = await fetch('/api/userLogin', {
+				method: 'POST',
+				body: JSON.stringify({ name: displayName, email, photoURL }),
+				headers: { 'Content-Type': 'application/json' },
+			});
+			const data = await response.json();
+			if (!response.ok) {
+				throw new Error(data.error || 'Failed to sign in');
+			}
 			dispatch(setAuthState(true));
 			dispatch(
 				setUserDetails({
-					uid: dbResponse.user._id,
+					uid: data.user._id,
 					name: displayName,
 					email,
 					photoURL,
 				})
 			);
-
-			// update push to replace after testing
-			router.push('/home');
+			router.push('/');
 		} catch (error) {
+			setError('Failed to sign in with Google');
+			console.error(error);
+		} finally {
 			setLoading(false);
-			setError('Failed to sign in with google');
-			console.log(error);
-		}
-	};
-
-	const addUserDetails = async (user: userProps) => {
-		const { displayName, email, photoURL } = user;
-		const res = await fetch('/api/userLogin', {
-			method: 'POST',
-			body: JSON.stringify({ name: displayName, email, photoURL }),
-			headers: { 'Content-Type': 'application/json' },
-		});
-		const response = await res.json();
-		return response;
-		if (!res.ok) {
-			throw new Error('Failed to add user details');
 		}
 	};
 

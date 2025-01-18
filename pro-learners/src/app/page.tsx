@@ -1,4 +1,4 @@
-import Login from '@/components/Auth/Auth';
-export default function home() {
-	return <Login />;
+import HomePage from '@/components/HomePage/HomePage';
+export default function Home() {
+	return <HomePage />;
 }
