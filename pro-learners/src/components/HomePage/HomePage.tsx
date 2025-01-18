@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import CourseCard from '../PathCard/PathCard';
 import { PathData, PathsApiResponse } from '@/utils/types';
 import { RootState } from '@/store/store';
-
+import Logout from '../Logout/Logout';
 const HomePage = () => {
 	const [paths, setPaths] = useState<PathData[]>([]);
 	const [error, setError] = useState<string>('');
@@ -39,6 +39,7 @@ const HomePage = () => {
 
 	return (
 		<div>
+			<Logout />
 			<ul>
 				{paths.map((path: PathData, index: number) => (
 					<li key={`${path.pathCode}-${index}`}>
