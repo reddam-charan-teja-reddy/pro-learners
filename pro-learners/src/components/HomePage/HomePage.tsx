@@ -7,6 +7,9 @@ import { PathData, PathsApiResponse } from '@/utils/types';
 import { RootState } from '@/store/store';
 import { setUserPaths } from '@/store/userPathsSlice';
 import Logout from '../Logout/Logout';
+import Navbar from '@/components/Navbar/Navbar';
+import ProfileButton from '../ProfileButton/ProfileButton';
+
 const HomePage = () => {
 	const dispatch = useDispatch();
 	const [error, setError] = useState<string>('');
@@ -41,7 +44,10 @@ const HomePage = () => {
 
 	return (
 		<div>
+			<Navbar />
+			<ProfileButton />
 			<Logout />
+
 			<ul>
 				{paths.map((path: PathData, index: number) => (
 					<li key={`${path.pathCode}-${index}`}>
