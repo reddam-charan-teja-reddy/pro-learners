@@ -9,11 +9,11 @@ import {
 	ModalFooter,
 	useDisclosure,
 } from '@heroui/modal';
+import ProfilePage from '../ProfilePage/ProfilePage';
 
 const ProfileButton = () => {
 	const user = useSelector((state: RootState) => state.user);
-	// later add onclick event to conditional render profile view as a <modal />
-	// follow the following documentation: https://www.heroui.com/docs/components/modal
+	// follow the following documentation for any changes or references: https://www.heroui.com/docs/components/modal
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return (
@@ -30,7 +30,7 @@ const ProfileButton = () => {
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<p>profile</p>
+							<ProfilePage />
 						</>
 					)}
 				</ModalContent>
