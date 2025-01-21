@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { use } from 'react';
 
 const UserPathSchema = new Schema(
 	{
