@@ -14,11 +14,17 @@ import userInfoSlice from './userInfoSlice';
 import userPathsSlice from './userPathsSlice';
 import userInterestsSlice from './userInterestsSlice';
 import userSkillsSlice from './userSkillsSlice';
-
+import userPathManagementSlice from './userPathManagementSlice';
 const persistConfig = {
 	key: 'root',
 	storage,
-	whitelist: ['user', 'userPaths', 'userInterests', 'userSkills'], // only persist these reducers
+	whitelist: [
+		'user',
+		'userPaths',
+		'userInterests',
+		'userSkills',
+		'userPathManagement',
+	], // only persist these reducers
 };
 
 const rootReducer = combineReducers({
@@ -26,6 +32,7 @@ const rootReducer = combineReducers({
 	userPaths: userPathsSlice,
 	userInterests: userInterestsSlice,
 	userSkills: userSkillsSlice,
+	userPathManagement: userPathManagementSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

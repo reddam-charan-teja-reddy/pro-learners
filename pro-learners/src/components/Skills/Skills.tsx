@@ -19,6 +19,37 @@ const Skills = () => {
 	const user = useSelector((state: RootState) => state.user);
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+	useEffect(() => {
+		const fetchSkills = async () => {
+			try {
+				const res = await fetch(`/api/skills?userId=${user.userDetails.uid}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				});
+
+				if (res.ok) {
+					const data = await res.json();
+					dispatch(
+						setUserSkills({
+							skills: data.skills,
+							userId: user.userDetails.uid,
+						})
+					);
+				} else {
+					console.error('Failed to fetch skills');
+				}
+			} catch (error) {
+				console.error('Error fetching skills:', error);
+			}
+		};
+
+		if (user.userDetails?.uid) {
+			fetchSkills();
+		}
+	}, [user.userDetails?.uid, dispatch]);
+
 	// Function to add new skill
 	const addSkill = async () => {
 		if (!newSkill.trim()) return;
