@@ -65,3 +65,41 @@ export async function GET(req: NextRequest) {
 		return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
 	}
 }
+
+export async function DELETE(req: NextRequest) {
+	try {
+		await connectDb();
+		const { userId, interest } = await req.json();
+
+		if (!userId || !interest) {
+			return NextResponse.json(
+				{ error: 'UserId and interest are required' },
+				{ status: 400 }
+			);
+		}
+
+		// Find the user's interests document
+		const userInterests = await Interests.findOne({ userId });
+
+		if (!userInterests) {
+			return NextResponse.json(
+				{ error: 'User interests not found' },
+				{ status: 404 }
+			);
+		}
+
+		// Remove the interest from the array
+		userInterests.interests = userInterests.interests.filter(
+			(i: string) => i !== interest
+		);
+		await userInterests.save();
+
+		return NextResponse.json({
+			message: 'Interest removed successfully',
+			interests: userInterests.interests,
+		});
+	} catch (error) {
+		console.error('Error in DELETE /api/interests:', error);
+		return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+	}
+}

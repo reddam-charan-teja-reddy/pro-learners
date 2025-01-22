@@ -82,6 +82,36 @@ const Interests = () => {
 		}
 	}, [user.userDetails?.uid]);
 
+	// Add this new function to handle interest removal
+	const removeInterest = async (interestToRemove: String) => {
+		try {
+			const res = await fetch('/api/interests', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					userId: user.userDetails.uid,
+					interest: interestToRemove,
+				}),
+			});
+
+			if (res.ok) {
+				const data = await res.json();
+				dispatch(
+					setUserInterests({
+						interests: data.interests,
+						userId: user.userDetails.uid,
+					})
+				);
+			} else {
+				console.error('Failed to remove interest');
+			}
+		} catch (error) {
+			console.error('Error removing interest:', error);
+		}
+	};
+
 	return (
 		<div>
 			<Button onPress={onOpen}>Interests</Button>
@@ -97,8 +127,14 @@ const Interests = () => {
 									{userInterests.interests.length > 0 ? (
 										<ul className='list-disc pl-4'>
 											{userInterests.interests.map((interest, index) => (
-												<li key={index} className='mb-2'>
-													{interest}
+												<li key={index} className='mb-2 flex items-center justify-between'>
+													<span>{interest}</span>
+													<button
+														onClick={() => removeInterest(interest)}
+														className='text-red-500 hover:text-red-700 ml-2'
+													>
+														×
+													</button>
 												</li>
 											))}
 										</ul>

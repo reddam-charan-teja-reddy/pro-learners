@@ -13,17 +13,19 @@ import storage from '@/hooks/storage';
 import userInfoSlice from './userInfoSlice';
 import userPathsSlice from './userPathsSlice';
 import userInterestsSlice from './userInterestsSlice';
+import userSkillsSlice from './userSkillsSlice';
 
 const persistConfig = {
 	key: 'root',
 	storage,
-	whitelist: ['user', 'userPaths', 'userInterests'], // only persist these reducers
+	whitelist: ['user', 'userPaths', 'userInterests', 'userSkills'], // only persist these reducers
 };
 
 const rootReducer = combineReducers({
 	user: userInfoSlice,
 	userPaths: userPathsSlice,
 	userInterests: userInterestsSlice,
+	userSkills: userSkillsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
