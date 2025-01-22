@@ -8,15 +8,21 @@ import {
 	Input,
 	Select,
 	SelectItem,
-} from '@heroui/react';
+} from '@nextui-org/react';
 import { useState, useEffect } from 'react';
 import { RootState } from '@/store/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserPathManagement } from '@/store/userPathManagementSlice';
+import styles from '@/styles/shared.module.css';
+import { motion } from 'framer-motion';
+import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import clsx from 'clsx';
+import Skeleton from 'react-loading-skeleton';
 
 const PathManagement = () => {
 	const dispatch = useDispatch();
-	const [isEditing, setIsEditing] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string>('');
 	const [formData, setFormData] = useState({
 		customMsg: '',
 		learningSpeed: 'medium',
@@ -40,10 +46,8 @@ const PathManagement = () => {
 	}, [pathManagement]);
 
 	const handleSubmit = async () => {
-		console.log(formData);
-		if (!formData.customMsg.trim()) return;
-
 		try {
+			setIsLoading(true);
 			const res = await fetch('/api/pathManagement', {
 				method: 'POST',
 				headers: {
@@ -55,112 +59,170 @@ const PathManagement = () => {
 				}),
 			});
 
-			if (res.ok) {
-				const data = await res.json();
-				dispatch(
-					setUserPathManagement({
-						...data,
-						userId: user.userDetails.uid,
-					})
-				);
-				setIsEditing(false);
-			} else {
-				console.error('Failed to update path management data');
+			if (!res.ok) {
+				throw new Error('Failed to update path management data');
 			}
+
+			const data = await res.json();
+			dispatch(
+				setUserPathManagement({
+					...data,
+					userId: user.userDetails.uid,
+				})
+			);
+			setError('');
 		} catch (error) {
-			console.error('Error updating path management:', error);
+			setError('Failed to update settings');
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
+	const learningSpeedOptions = [
+		{ key: 'slow', label: 'Slow Paced' },
+		{ key: 'medium', label: 'Medium Paced' },
+		{ key: 'fast', label: 'Fast Paced' },
+	];
+
 	return (
 		<div>
-			<Button onPress={onOpen}>Path Management</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<Button
+				onPress={onOpen}
+				className={clsx(styles.buttonSecondary, 'w-full justify-center')}
+			>
+				<AdjustmentsHorizontalIcon className='h-5 w-5 mr-2' />
+				Path Settings
+			</Button>
+
+			<Modal
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
+				className={styles.modalContent}
+			>
 				<ModalContent>
-					<ModalHeader>Path Management</ModalHeader>
-					<ModalBody>
-						<div className='flex flex-col gap-4'>
-							{isEditing ? (
-								<>
-									<Input
-										label='Custom Message'
-										placeholder='Enter a custom message'
-										value={formData.customMsg}
-										onChange={(e) =>
-											setFormData((prev) => ({ ...prev, customMsg: e.target.value }))
-										}
-									/>
-									<Input
-										label='Current Education'
-										placeholder='Enter your current education'
-										value={formData.currentEducation}
-										onChange={(e) =>
-											setFormData((prev) => ({
-												...prev,
-												currentEducation: e.target.value,
-											}))
-										}
-									/>
-									<Input
-										label='Country'
-										placeholder='Enter your country'
-										value={formData.country}
-										onChange={(e) =>
-											setFormData((prev) => ({ ...prev, country: e.target.value }))
-										}
-									/>
-									<Select
-										label='Learning Speed'
-										value={formData.learningSpeed}
-										onChange={(e) =>
-											setFormData((prev) => ({ ...prev, learningSpeed: e.target.value }))
-										}
-										selectedKeys={[formData.learningSpeed]}
+					{(onClose: () => void) => (
+						<>
+							<ModalHeader className='text-xl font-semibold'>
+								Learning Path Settings
+							</ModalHeader>
+							<ModalBody>
+								{error && (
+									<motion.div
+										initial={{ opacity: 0, y: -10 }}
+										animate={{ opacity: 1, y: 0 }}
+										className='bg-red-50 text-red-600 p-3 rounded-md mb-4'
 									>
-										<SelectItem key='slow' value='slow'>
-											Slow
-										</SelectItem>
-										<SelectItem key='medium' value='medium'>
-											Medium
-										</SelectItem>
-										<SelectItem key='fast' value='fast'>
-											Fast
-										</SelectItem>
-									</Select>{' '}
-								</>
-							) : (
-								<div className='flex flex-col gap-2'>
-									<div className='p-2 border rounded'>
-										<p>
-											<strong>Custom Message:</strong>{' '}
-											{pathManagement.customMsg || 'Not set'}
-										</p>
-										<p>
-											<strong>Current Education:</strong>{' '}
-											{pathManagement.currentEducation || 'Not set'}
-										</p>
-										<p>
-											<strong>Country:</strong> {pathManagement.country || 'Not set'}
-										</p>
-										<p>
-											<strong>Learning Speed:</strong> {pathManagement.learningSpeed}
-										</p>
+										{error}
+									</motion.div>
+								)}
+
+								<div className='space-y-6'>
+									{isLoading ? (
+										<div className='space-y-4'>
+											{[...Array(4)].map((_, index) => (
+												<Skeleton key={index} height={40} />
+											))}
+										</div>
+									) : (
+										<>
+											<div className='space-y-2'>
+												<label className='block text-sm font-medium text-gray-700'>
+													Custom Message
+												</label>
+												<Input
+													value={formData.customMsg}
+													onChange={(e) =>
+														setFormData((prev) => ({
+															...prev,
+															customMsg: e.target.value,
+														}))
+													}
+													placeholder='Enter a custom message'
+													className={styles.input}
+												/>
+											</div>
+
+											<div className='space-y-2'>
+												<label className='block text-sm font-medium text-gray-700'>
+													Current Education
+												</label>
+												<Input
+													value={formData.currentEducation}
+													onChange={(e) =>
+														setFormData((prev) => ({
+															...prev,
+															currentEducation: e.target.value,
+														}))
+													}
+													placeholder='Enter your current education'
+													className={styles.input}
+												/>
+											</div>
+
+											<div className='space-y-2'>
+												<label className='block text-sm font-medium text-gray-700'>
+													Country
+												</label>
+												<Input
+													value={formData.country}
+													onChange={(e) =>
+														setFormData((prev) => ({
+															...prev,
+															country: e.target.value,
+														}))
+													}
+													placeholder='Enter your country'
+													className={styles.input}
+												/>
+											</div>
+
+											<div className='space-y-2'>
+												<label className='block text-sm font-medium text-gray-700'>
+													Learning Speed
+												</label>
+												<Select
+													value={formData.learningSpeed}
+													onChange={(e) =>
+														setFormData((prev) => ({
+															...prev,
+															learningSpeed: e.target.value,
+														}))
+													}
+													className={styles.input}
+												>
+													{learningSpeedOptions.map((option) => (
+														<SelectItem key={option.key} value={option.key}>
+															{option.label}
+														</SelectItem>
+													))}
+												</Select>
+											</div>
+										</>
+									)}
+
+									<div className='flex justify-end gap-2 pt-4'>
+										<Button
+											color='danger'
+											variant='light'
+											onPress={onClose}
+											className={styles.buttonSecondary}
+											disabled={isLoading}
+										>
+											Cancel
+										</Button>
+										<Button
+											color='primary'
+											onPress={handleSubmit}
+											className={styles.button}
+											disabled={isLoading}
+										>
+											{isLoading ? 'Saving...' : 'Save Changes'}
+										</Button>
 									</div>
 								</div>
-							)}
-							<Button
-								onPress={() => {
-									if (isEditing) {
-										handleSubmit();
-									} else {
-										setIsEditing(true);
-									}
-								}}
-							>
-								{isEditing ? 'Save Changes' : 'Edit Details'}
-							</Button>
-						</div>
-					</ModalBody>
+							</ModalBody>
+						</>
+					)}
 				</ModalContent>
 			</Modal>
 		</div>
