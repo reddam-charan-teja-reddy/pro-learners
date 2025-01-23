@@ -5,8 +5,8 @@ import {
 	ModalHeader,
 	ModalBody,
 	Button,
-	useDisclosure,
 	Input,
+	useDisclosure,
 } from '@nextui-org/react';
 import { useState, useEffect } from 'react';
 import { RootState } from '@/store/store';
@@ -95,7 +95,7 @@ const Interests = () => {
 	}, [user.userDetails?.uid]);
 
 	// Add this new function to handle interest removal
-	const removeInterest = async (interestToRemove: string) => {
+	const removeInterest = async (interestToRemove: String) => {
 		try {
 			setIsLoading(true);
 			const res = await fetch('/api/interests', {
@@ -141,7 +141,7 @@ const Interests = () => {
 				className={clsx(styles.buttonSecondary, 'w-full justify-center')}
 			>
 				<PlusIcon className='h-5 w-5 mr-2' />
-				Add Interests
+				Manage Interests
 			</Button>
 
 			<Modal
@@ -152,7 +152,7 @@ const Interests = () => {
 				<ModalContent>
 					{(onClose: () => void) => (
 						<>
-							<ModalHeader className='text-xl font-semibold'>
+							<ModalHeader className='text-xl font-semibold text-red-600'>
 								Manage Interests
 							</ModalHeader>
 							<ModalBody>
@@ -200,7 +200,7 @@ const Interests = () => {
 												<AnimatePresence>
 													{userInterests.interests.map((interest, index) => (
 														<motion.div
-															key={interest}
+															key={index}
 															initial={{ opacity: 0, scale: 0.8 }}
 															animate={{ opacity: 1, scale: 1 }}
 															exit={{ opacity: 0, scale: 0.8 }}

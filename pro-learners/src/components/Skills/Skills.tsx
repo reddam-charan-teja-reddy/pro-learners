@@ -142,7 +142,7 @@ const Skills = () => {
 				className={clsx(styles.buttonSecondary, 'w-full justify-center')}
 			>
 				<PlusIcon className='h-5 w-5 mr-2' />
-				Add Skills
+				Manage Skills
 			</Button>
 
 			<Modal
@@ -153,7 +153,7 @@ const Skills = () => {
 				<ModalContent>
 					{(onClose: () => void) => (
 						<>
-							<ModalHeader className='text-xl font-semibold'>
+							<ModalHeader className='text-xl font-semibold text-red-600'>
 								Manage Skills
 							</ModalHeader>
 							<ModalBody>

@@ -10,8 +10,8 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalBody,
-	Button,
-} from '@heroui/react';
+	useDisclosure,
+} from '@nextui-org/react';
 import styles from '@/styles/shared.module.css';
 import { motion } from 'framer-motion';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
@@ -21,11 +21,11 @@ const Logout = () => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
-	const [modalIsOpen, setModalIsOpen] = useState(true);
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	useEffect(() => {
-		console.log('Modal state changed to:', modalIsOpen);
-	}, [modalIsOpen]);
+		console.log('Modal state changed to:', isOpen);
+	}, [isOpen]);
 
 	const handleLogout = async () => {
 		try {
@@ -50,8 +50,8 @@ const Logout = () => {
 
 	return (
 		<div>
-			<Button
-				onPress={() => setModalIsOpen(true)}
+			<button
+				onClick={onOpen}
 				className={clsx(
 					styles.buttonSecondary,
 					'text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200'
@@ -59,11 +59,11 @@ const Logout = () => {
 			>
 				<ArrowRightOnRectangleIcon className='h-5 w-5 mr-2' />
 				Sign Out
-			</Button>
+			</button>
 
 			<Modal
-				isOpen={modalIsOpen}
-				onOpenChange={() => setModalIsOpen(!modalIsOpen)}
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
 				className={styles.modalContent}
 				backdrop='blur'
 				size='full'
@@ -75,7 +75,7 @@ const Logout = () => {
 							animate={{ opacity: 1, scale: 1 }}
 							exit={{ opacity: 0, scale: 0.95 }}
 						>
-							<ModalHeader className='text-xl text-red font-bold'>
+							<ModalHeader className='text-xl font-semibold text-red-600'>
 								Confirm Sign Out
 							</ModalHeader>
 							<ModalBody>
@@ -85,17 +85,16 @@ const Logout = () => {
 								</p>
 
 								<div className='flex justify-end gap-3 mt-6'>
-									<Button
-										variant='light'
-										onPress={onClose}
+									<button
+										onClick={onClose}
 										className={styles.buttonSecondary}
 										disabled={isLoading}
 									>
 										Cancel
-									</Button>
-									<Button
+									</button>
+									<button
 										color='danger'
-										onPress={handleLogout}
+										onClick={handleLogout}
 										className={clsx(
 											styles.button,
 											'bg-red-600 hover:bg-red-700 focus:ring-red-500'
@@ -103,7 +102,7 @@ const Logout = () => {
 										disabled={isLoading}
 									>
 										{isLoading ? 'Signing out...' : 'Sign Out'}
-									</Button>
+									</button>
 								</div>
 							</ModalBody>
 						</motion.div>

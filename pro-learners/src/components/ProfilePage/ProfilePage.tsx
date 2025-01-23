@@ -1,7 +1,7 @@
 import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
-import Interests from '../Intrests/Intrests';
+import Interests from '../Interests/Interests';
 import Skills from '../Skills/Skills';
 import PathManagement from '../PathManagement/PathManagement';
 import Logout from '../Logout/Logout';
@@ -23,7 +23,7 @@ const ProfilePage = () => {
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 20 }}
-			className='space-y-6 p-6'
+			className='space-y-6 p-6 overflow-y-auto'
 		>
 			<div className='text-center'>
 				<div className='relative inline-block'>
@@ -72,7 +72,7 @@ const ProfilePage = () => {
 				))}
 			</div>
 
-			<div className='mt-8 text-center'>
+			<div className='mt-8 text-center pb-6'>
 				<Logout />
 			</div>
 		</motion.div>

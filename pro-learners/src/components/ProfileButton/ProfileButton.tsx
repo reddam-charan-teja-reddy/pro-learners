@@ -10,13 +10,12 @@ import { useState } from 'react';
 
 const ProfileButton = () => {
 	const user = useSelector((state: RootState) => state.user);
-	// follow the following documentation for any changes or references: https://www.heroui.com/docs/components/modal
-	const [modalIsOpen, setModalIsOpen] = useState(true);
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return (
 		<div className='relative'>
 			<motion.button
-				onClick={() => setModalIsOpen(true)}
+				onClick={onOpen}
 				whileHover={{ scale: 1.05 }}
 				whileTap={{ scale: 0.95 }}
 				className={clsx(
@@ -48,11 +47,18 @@ const ProfileButton = () => {
 			</motion.button>
 
 			<Modal
-				isOpen={modalIsOpen}
-				onOpenChange={() => setModalIsOpen(!modalIsOpen)}
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
 				className={styles.modalContent}
 				size='2xl'
 				scrollBehavior='inside'
+				classNames={{
+					body: 'overflow-auto max-h-[80vh]',
+					backdrop: 'bg-gradient-to-t from-zinc-900 to-zinc-900/10',
+					base: 'border-zinc-200 dark:border-zinc-700',
+					header: 'border-b-[1px] border-zinc-200 dark:border-zinc-700',
+					footer: 'border-t-[1px] border-zinc-200 dark:border-zinc-700',
+				}}
 			>
 				<ModalContent>
 					{(onClose: () => void) => (
@@ -60,6 +66,7 @@ const ProfileButton = () => {
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: 20 }}
+							className='max-h-[80vh] overflow-y-auto'
 						>
 							<ProfilePage />
 						</motion.div>

@@ -102,7 +102,7 @@ const PathManagement = () => {
 				<ModalContent>
 					{(onClose: () => void) => (
 						<>
-							<ModalHeader className='text-xl font-semibold'>
+							<ModalHeader className='text-xl font-semibold text-red-600'>
 								Learning Path Settings
 							</ModalHeader>
 							<ModalBody>
