@@ -11,7 +11,7 @@ const Navbar = () => {
 	const pathname = usePathname();
 
 	const navItems = [
-		{ href: '/home', icon: AiOutlineHome, label: 'Home' },
+		{ href: '/', icon: AiOutlineHome, label: 'Home' },
 		{ href: '/plus', icon: FiPlus, label: 'Add' },
 		{ href: '/course', icon: TbCircleLetterC, label: 'Courses' },
 	];

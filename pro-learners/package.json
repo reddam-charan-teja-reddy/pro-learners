@@ -9,6 +9,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@google-cloud/vertexai": "^1.9.2",
 		"@headlessui/tailwindcss": "^0.2.1",
 		"@heroicons/react": "^2.2.0",
 		"@nextui-org/react": "^2.6.11",
