@@ -1,20 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import {
-	persistStore,
-	persistReducer,
-	FLUSH,
-	REHYDRATE,
-	PAUSE,
-	PERSIST,
-	PURGE,
-	REGISTER,
-} from 'redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
 import storage from '@/hooks/storage';
 import userInfoSlice from './userInfoSlice';
 import userPathsSlice from './userPathsSlice';
 import userInterestsSlice from './userInterestsSlice';
 import userSkillsSlice from './userSkillsSlice';
 import userPathManagementSlice from './userPathManagementSlice';
+import roadmapsSlice from './roadmapsSlice';
 const persistConfig = {
 	key: 'root',
 	storage,
@@ -33,6 +25,7 @@ const rootReducer = combineReducers({
 	userInterests: userInterestsSlice,
 	userSkills: userSkillsSlice,
 	userPathManagement: userPathManagementSlice,
+	roadmaps: roadmapsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -41,9 +34,7 @@ export const store = configureStore({
 	reducer: persistedReducer,
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
-			serializableCheck: {
-				ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-			},
+			serializableCheck: false,
 		}),
 });
 

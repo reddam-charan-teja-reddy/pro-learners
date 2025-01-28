@@ -7,11 +7,6 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/app/firebase/config';
 import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
-type userProps = {
-	displayName: string;
-	email: string;
-	photoURL: string;
-};
 
 const Auth = () => {
 	const router = useRouter();
